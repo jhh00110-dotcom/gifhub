@@ -1,0 +1,132 @@
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- Tạo ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "WerewolfMemeGui"
+screenGui.ResetOnSpawn = false
+screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+screenGui.Parent = playerGui
+
+-- Tạo khung nền
+local backgroundFrame = Instance.new("Frame")
+backgroundFrame.Name = "Background"
+backgroundFrame.Size = UDim2.new(1, 0, 1, 0)
+backgroundFrame.Position = UDim2.new(0, 0, 0, 0)
+backgroundFrame.BackgroundColor3 = Color3.fromRGB(15, 25, 30)
+backgroundFrame.BorderSizePixel = 0
+backgroundFrame.Parent = screenGui
+
+-- Tạo ImageLabel cho hình nền sói
+local wolfImage = Instance.new("ImageLabel")
+wolfImage.Name = "WolfImage"
+wolfImage.Size = UDim2.new(1, 0, 1, 0)
+wolfImage.Position = UDim2.new(0, 0, 0, 0)
+wolfImage.BackgroundTransparency = 1
+wolfImage.Image = "rbxassetid://0" -- Thay thế bằng ID hình ảnh của bạn
+wolfImage.ImageColor3 = Color3.fromRGB(100, 120, 130)
+wolfImage.ImageTransparency = 0.3
+wolfImage.ScaleType = Enum.ScaleType.Crop
+wolfImage.Parent = backgroundFrame
+
+-- Tạo hiệu ứng overlay tối
+local overlay = Instance.new("Frame")
+overlay.Name = "Overlay"
+overlay.Size = UDim2.new(1, 0, 1, 0)
+overlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+overlay.BackgroundTransparency = 0.5
+overlay.BorderSizePixel = 0
+overlay.Parent = backgroundFrame
+
+-- Hàm tạo text label với hiệu ứng
+local function createTextLabel(text, position, textColor, parent)
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Size = UDim2.new(0.8, 0, 0.1, 0)
+    textLabel.Position = position
+    textLabel.BackgroundTransparency = 1
+    textLabel.Text = text
+    textLabel.TextColor3 = textColor
+    textLabel.TextScaled = true
+    textLabel.Font = Enum.Font.GothamBold
+    textLabel.TextStrokeTransparency = 0.5
+    textLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    textLabel.TextTransparency = 1
+    textLabel.Parent = parent
+    
+    -- Hiệu ứng xuất hiện
+    local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    local tween = TweenService:Create(textLabel, tweenInfo, {TextTransparency = 0})
+    tween:Play()
+    
+    return textLabel
+end
+
+-- Container cho các text
+local textContainer = Instance.new("Frame")
+textContainer.Name = "TextContainer"
+textContainer.Size = UDim2.new(0.8, 0, 0.6, 0)
+textContainer.Position = UDim2.new(0.1, 0, 0.2, 0)
+textContainer.BackgroundTransparency = 1
+textContainer.Parent = backgroundFrame
+
+-- Tạo các dòng text
+local text1 = createTextLabel("Mày Nói Tao Béo", UDim2.new(0, 0, 0, 0), Color3.fromRGB(255, 255, 255), textContainer)
+wait(0.2)
+local text2 = createTextLabel("Tao Nhịn", UDim2.new(0, 0, 0.15, 0), Color3.fromRGB(255, 255, 255), textContainer)
+wait(0.8)
+
+local text3 = createTextLabel("Mày Nói Tao Gầy", UDim2.new(0, 0, 0.35, 0), Color3.fromRGB(255, 255, 255), textContainer)
+wait(0.2)
+local text4 = createTextLabel("Tao Nhịn", UDim2.new(0, 0, 0.5, 0), Color3.fromRGB(255, 255, 255), textContainer)
+wait(0.8)
+
+local text5 = createTextLabel("Mày Nói Tao Gầy", UDim2.new(0, 0, 0.7, 0), Color3.fromRGB(255, 255, 255), textContainer)
+wait(0.2)
+local text6 = createTextLabel("SẤT !", UDim2.new(0, 0, 0.85, 0), Color3.fromRGB(255, 50, 50), textContainer)
+
+-- Hiệu ứng rung cho text cuối
+wait(0.3)
+local shakeCount = 0
+while shakeCount < 10 do
+    text6.Position = UDim2.new(math.random(-10, 10) / 1000, 0, 0.85, math.random(-10, 10))
+    wait(0.05)
+    shakeCount = shakeCount + 1
+end
+text6.Position = UDim2.new(0, 0, 0.85, 0)
+
+-- Hiệu ứng flash đỏ
+local flashFrame = Instance.new("Frame")
+flashFrame.Name = "Flash"
+flashFrame.Size = UDim2.new(1, 0, 1, 0)
+flashFrame.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+flashFrame.BackgroundTransparency = 1
+flashFrame.BorderSizePixel = 0
+flashFrame.Parent = backgroundFrame
+
+local flashTween = TweenService:Create(
+    flashFrame, 
+    TweenInfo.new(0.2, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, 3, true), 
+    {BackgroundTransparency = 0.5}
+)
+flashTween:Play()
+
+-- Nút đóng (tùy chọn)
+local closeButton = Instance.new("TextButton")
+closeButton.Size = UDim2.new(0.1, 0, 0.05, 0)
+closeButton.Position = UDim2.new(0.88, 0, 0.02, 0)
+closeButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+closeButton.Text = "X"
+closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+closeButton.Font = Enum.Font.GothamBold
+closeButton.TextScaled = true
+closeButton.Parent = backgroundFrame
+
+closeButton.MouseButton1Click:Connect(function()
+    screenGui:Destroy()
+end)
+
+-- Auto destroy sau 10 giây (tùy chọn)
+-- wait(10)
+-- screenGui:Destroy()
